@@ -54,7 +54,7 @@
     target: 'esnext',
     outDir: 'dist',
   },
-  base: '/createImage/',
+  base: '/',
     server: {
       port: 3000,
       open: true,
