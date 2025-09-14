@@ -399,7 +399,11 @@ export default function App() {
                 <canvas 
                   ref={previewCanvasRef}
                   className="w-full max-w-xs sm:w-64 h-auto object-contain rounded-lg shadow-lg border cursor-move"
-                  style={{ display: imageLoaded ? 'block' : 'none' }}
+                  style={{ 
+                    display: imageLoaded ? 'block' : 'none',
+                    touchAction: 'none',
+                    userSelect: 'none'
+                  }}
                   onMouseDown={(e) => {
                     setIsDragging(true);
                     const rect = e.currentTarget.getBoundingClientRect();
@@ -431,6 +435,49 @@ export default function App() {
                   }}
                   onMouseUp={() => setIsDragging(false)}
                   onMouseLeave={() => setIsDragging(false)}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDragging(true);
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const canvas = previewCanvasRef.current;
+                    if (canvas && e.touches.length > 0) {
+                      const scaleX = canvas.width / rect.width;
+                      const scaleY = canvas.height / rect.height;
+                      setDragStart({
+                        x: (e.touches[0].clientX - rect.left) * scaleX,
+                        y: (e.touches[0].clientY - rect.top) * scaleY
+                      });
+                    }
+                  }}
+                  onTouchMove={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (!isDragging) return;
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const canvas = previewCanvasRef.current;
+                    if (canvas && e.touches.length > 0) {
+                      const scaleX = canvas.width / rect.width;
+                      const scaleY = canvas.height / rect.height;
+                      const newX = (e.touches[0].clientX - rect.left) * scaleX;
+                      const newY = (e.touches[0].clientY - rect.top) * scaleY;
+                      
+                      setTextPosition({
+                        x: Math.max(0.1, Math.min(0.9, newX / canvas.width)),
+                        y: Math.max(0.05, Math.min(0.8, newY / canvas.height))
+                      });
+                    }
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDragging(false);
+                  }}
+                  onTouchCancel={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDragging(false);
+                  }}
                 />
                 <p className="text-center text-sm text-gray-600 mt-2">
                   Download Preview - Drag text to move
