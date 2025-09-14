@@ -35,6 +35,18 @@ export default function App() {
     line8: (quotes as any).quoteLine8
   });
   
+  // Per-line text colors
+  const [quoteColors, setQuoteColors] = useState({
+    line1: '#000000',
+    line2: '#000000',
+    line3: '#000000',
+    line4: '#000000',
+    line5: '#000000',
+    line6: '#000000',
+    line7: '#000000',
+    line8: '#000000'
+  });
+  
   const [webmUrlBrowser, setWebmUrlBrowser] = useState<string | null>(null);
 
   // Dynamically load all images from assets folder
@@ -97,7 +109,7 @@ export default function App() {
       drawCanvas();
       drawPreviewCanvas();
     }
-  }, [imageLoaded, selectedImage, textPosition, selectedFilter, quoteLines, emoji]);
+  }, [imageLoaded, selectedImage, textPosition, selectedFilter, quoteLines, quoteColors, emoji]);
 
   const drawCanvas = () => {
     const canvas = canvasRef.current;
@@ -128,14 +140,14 @@ export default function App() {
      ctx.textAlign = 'center';
      // dOWNLOAD IMPACT AREA
      const lines = [
-       { text: quoteLines.line1, color: '#000000' },//#dc2626 - red
-       { text: quoteLines.line2, color: '#000000' },
-       { text: quoteLines.line3, color: '#000000' },
-       { text: quoteLines.line4, color: '#000000' },
-       { text: quoteLines.line5, color: '#000000' },
-       { text: quoteLines.line6, color: '#000000' },
-       { text: quoteLines.line7, color: '#000000' },
-       { text: quoteLines.line8, color: '#000000' }
+       { text: quoteLines.line1, color: quoteColors.line1 },
+       { text: quoteLines.line2, color: quoteColors.line2 },
+       { text: quoteLines.line3, color: quoteColors.line3 },
+       { text: quoteLines.line4, color: quoteColors.line4 },
+       { text: quoteLines.line5, color: quoteColors.line5 },
+       { text: quoteLines.line6, color: quoteColors.line6 },
+       { text: quoteLines.line7, color: quoteColors.line7 },
+       { text: quoteLines.line8, color: quoteColors.line8 }
      ];
 
      lines.forEach((line, index) => {
@@ -174,14 +186,14 @@ export default function App() {
      ctx.textAlign = 'center';
      
      const lines = [
-       { text: quoteLines.line1, color: '#000000' },//#dc2626 - red
-       { text: quoteLines.line2, color: '#000000' },
-       { text: quoteLines.line3, color: '#000000' },
-       { text: quoteLines.line4, color: '#000000' },
-       { text: quoteLines.line5, color: '#000000' },
-       { text: quoteLines.line6, color: '#000000' },
-       { text: quoteLines.line7, color: '#000000' },
-       { text: quoteLines.line8, color: '#000000' }
+       { text: quoteLines.line1, color: quoteColors.line1 },
+       { text: quoteLines.line2, color: quoteColors.line2 },
+       { text: quoteLines.line3, color: quoteColors.line3 },
+       { text: quoteLines.line4, color: quoteColors.line4 },
+       { text: quoteLines.line5, color: quoteColors.line5 },
+       { text: quoteLines.line6, color: quoteColors.line6 },
+       { text: quoteLines.line7, color: quoteColors.line7 },
+       { text: quoteLines.line8, color: quoteColors.line8 }
      ];
 
      lines.forEach((line, index) => {
@@ -451,6 +463,16 @@ export default function App() {
                       }))}
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       placeholder={`Line ${lineNum}`}
+                    />
+                    <input
+                      type="color"
+                      value={quoteColors[`line${lineNum}` as keyof typeof quoteColors] as string}
+                      onChange={(e) => setQuoteColors(prev => ({
+                        ...prev,
+                        [`line${lineNum}`]: e.target.value
+                      }))}
+                      className="w-10 h-8 p-0 border border-gray-300 rounded"
+                      title="Pick text color"
                     />
                   </div>
                 ))}
